@@ -1,0 +1,109 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Cisdi SpiderMan</title>
+<link rel="stylesheet" type="text/css" media="screen" href="http://127.0.0.1/css/css-table.css" />
+<script type="text/javascript" src="http://127.0.0.1/js/jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="http://127.0.0.1/js/style-table.js"></script>
+<script src="http://127.0.0.1/js/vue.min.js"></script>
+</head>
+
+<body>
+<input id='hid-input' type='hidden' value={{ keyword }}></input>
+<table id="travel" summary="Travel times to work by main mode (Autumn 2006) - " style="width: 100%;">
+
+	<caption id='cap'>Info</caption>
+    
+    <thead>    
+    	<tr>
+            <th scope="col" rowspan="2">招聘公司</th>
+            <th scope="col" colspan="5">抓取的Info</th>
+        </tr>
+        
+        <tr>
+            <th scope="col">公司名</th>
+            <th scope="col">最低薪资</th>
+            <th scope="col">最高薪资</th>
+            <th scope="col">招聘职位</th>
+            <th scope="col">工作地点</th>
+        </tr>        
+    </thead>
+    
+    <tfoot id='tf'>
+    </tfoot>
+    
+    <tbody id='tb'>
+    </tbody>
+
+</table>
+
+</body>
+<script>
+	var cap = $('#cap');
+	var table = $("#tb");
+	getData();
+	function getData(){
+		var key = $('#hid-input').val();
+		$.get("http://127.0.0.1:8000/crawler/getcrawler?keyword="+key,function(data,status){
+			var str = JSON.parse(data);
+			if(str['status'] == '1'){
+				cap.text('');
+				cap.text('已爬取完成');
+				//搞完了
+				table.empty();
+				var arr = str['data'];
+				for (var i=0;i<arr.length;i++)
+				{	
+					var tr = $("<tr>"+
+							"<th scope='row'>"+
+							'智联招聘'
+							+"</th>"+
+					        "<td>"+arr[i]['comp']+"</td>"+
+					        "<td>"+arr[i]['low']+"</td>"+
+					        "<td>"+arr[i]['high']+"</td>"+
+					        "<td>"+arr[i]['pos']+"</td>"+
+					        "<td>"+arr[i]['addr']+"</td>"+
+					        +"</tr>");
+					table.append(tr)
+				}
+				var tot_info = str['total_data'];
+				var tf = $('#tf');
+				tf.empty();
+				var tfinfo = $("<tr>"+
+						"<th scope='row'>"+
+						tot_info['site']
+						+"</th>"+
+				        "<td>爬取总公司数:"+tot_info['count']+"家</td>"+
+				        "<td>"+tot_info['avg_low']+"</td>"+
+				        "<td>"+tot_info['avg_high']+"</td>"+
+				        "<td>"+tot_info['name']+"</td>"+
+				        "<td>无"+"</td>"+
+				        +"</tr>");
+				tf.append(tfinfo);
+			}else{
+				//没搞完，递归回去
+				//先展示现在的数据
+				cap.text('');
+				cap.text('持续爬取中,Loading');
+				table.empty();
+				var arr = str['data'];
+				for (var i=0;i<arr.length;i++)
+				{	
+					var tr = $("<tr>"+
+							"<th scope='row'>"+
+							'智联招聘'
+							+"</th>"+
+					        "<td>"+arr[i]['comp']+"</td>"+
+					        "<td>"+arr[i]['low']+"</td>"+
+					        "<td>"+arr[i]['high']+"</td>"+
+					        "<td>"+arr[i]['pos']+"</td>"+
+					        "<td>"+arr[i]['addr']+"</td>"+
+					        +"</tr>");
+					table.append(tr)
+				}
+				getData();
+			}
+		  });
+	}
+</script>
+</html>

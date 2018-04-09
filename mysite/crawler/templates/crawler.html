@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="http://127.0.0.1/js/jquery-1.2.6.min.js"></script>
+<style type="text/css">
+
+body {
+	background-color: #c2ccd0;
+	display:flex;
+	flex-direction:column;
+	overflow: hidden;
+	justify-content:center;
+	align-items:center;
+}
+#content{
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	height:400px;
+}
+#img-content{
+	width:200px;
+	height:200px;
+	
+}
+#next-content{
+	width:400px;
+	height:40px;
+	margin-top:20px;
+	display:flex;
+	flex-direction:row;
+}
+#input-content{
+	width:340px;
+	height:40px;
+}
+#bt-go{
+	width:60px;
+	height:40px;
+	background-color: #0000CD;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+}
+#bt-content{
+	font-size:10px;
+	color:#FFFFFF;
+}
+p.no2 {background-color: gray; padding: 20px;}
+
+</style>
+
+</head>
+
+<body>
+	<div id='content'>
+		<img id='img-content' src='http://127.0.0.1/img/logo.png'>
+		</img>
+		<div id='next-content'>
+			<input id='input-content'></input>
+			<div id='bt-go'>
+				<span id='bt-content'>
+					随力一下
+				</span>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	$('#bt-content').click(function(){
+		var con = $('#input-content').val()
+		if(con == ''){
+			alert('搜索职位不能为空');
+			return;
+		}
+		$(location).attr('href', 'http://127.0.0.1:8000/crawler/gocrawl?keyword='+con);
+	})
+</script>
+</html>
